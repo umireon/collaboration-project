@@ -15,7 +15,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 import java.io.*;
 import java.net.*;
 
@@ -26,9 +25,24 @@ import java.net.*;
 public class JabberClient {
 
     public static void main(String[] args) throws IOException {
+        int port = JabberServer.PORT;
+
+        try {
+            if (args.length > 1) {
+                throw new IllegalArgumentException();
+            }
+            port = Integer.parseInt(args[0]);
+        } catch (IndexOutOfBoundsException e) {
+            System.out.println("Using port " + JabberServer.PORT);
+        } catch (IllegalArgumentException e) {
+            System.out.println("Usage: JabberClient [port]");
+            System.out.println("[port] is default to " + JabberServer.PORT);
+            System.exit(1);
+        }
+
         InetAddress addr = InetAddress.getByName("localhost"); // IPアドレスへの変換
         System.out.println("addr = " + addr);
-        Socket socket = new Socket(addr, JabberServer.PORT); // ソケットの生成
+        Socket socket = new Socket(addr, port); // ソケットの生成
         try {
             System.out.println("socket = " + socket);
             BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream())); // データ受信用バッファの設定

@@ -15,7 +15,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 import java.io.*;
 import java.net.*;
 
@@ -28,7 +27,22 @@ public class JabberServer {
     public static final int PORT = 8080; // ポート番号を設定する.
 
     public static void main(String[] args) throws IOException {
-        ServerSocket s = new ServerSocket(PORT); // ソケットを作成する
+        int port = PORT;
+
+        try {
+            if (args.length > 1) {
+                throw new IllegalArgumentException();
+            }
+            port = Integer.parseInt(args[0]);
+        } catch (IndexOutOfBoundsException e) {
+            System.out.println("Using port " + PORT);
+        } catch (IllegalArgumentException e) {
+            System.out.println("Usage: JabberServer [port]");
+            System.out.println("[port] is default to " + PORT);
+            System.exit(1);
+        }
+
+        ServerSocket s = new ServerSocket(port); // ソケットを作成する
         System.out.println("Started: " + s);
         try {
             Socket socket = s.accept(); // コネクション設定要求を待つ
